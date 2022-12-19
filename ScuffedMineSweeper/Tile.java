@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Insets;
 
 public class Tile extends JButton {
+    private MineBoard board;
     private int gridx;
     private int gridy;
     private boolean isMine = false;
@@ -12,8 +13,9 @@ public class Tile extends JButton {
     private boolean isRevealed = false;
     private int adjacentMines = 0;
 
-    public Tile(int x, int y) {
+    public Tile(MineBoard board, int x, int y) {
         super();
+        this.board = board;
         this.gridx = x;
         this.gridy = y;
         this.setMargin(new Insets(0, 0, 0, 0));
@@ -42,7 +44,7 @@ public class Tile extends JButton {
                 if (e.getButton() == 3) {
                     if (!isRevealed) {
                         if (!isFlagged) {
-                            if (MineBoard.getFlagsLeft() > 0) {
+                            if (board.getFlagsLeft() > 0) {
                                 // set flag text to html flag icon
                                 setText("<html><div style='text-align: center;'>&#9873;</div></html>");
                             }
@@ -101,11 +103,11 @@ public class Tile extends JButton {
                 // reveal adjacent tiles using Main.board.tiles[i][j] to get adjacent tiles
                 for (int i = -1; i <= 1; i++) {
                     for (int j = -1; j <= 1; j++) {
-                        if (!(i == 0 && j == 0) && (this.gridx + i >= 0 && this.gridx + i < Main.board.width)
-                                && (this.gridy + j >= 0 && this.gridy + j < Main.board.height)) {
+                        if (!(i == 0 && j == 0) && (this.gridx + i >= 0 && this.gridx + i < board.width)
+                                && (this.gridy + j >= 0 && this.gridy + j < board.height)) {
                             // System.out.println("..so Revealing: " + (this.gridx+i) + ", " +
                             // (this.gridy+j));
-                            Main.board.tiles[this.gridx + i][this.gridy + j].reveal();
+                            board.getTiles()[this.gridx + i][this.gridy + j].reveal();
                         }
                         // System.out.println("Would Have Revealed: " + (this.gridx+i) + ", " +
                         // (this.gridy+j)+
@@ -117,8 +119,8 @@ public class Tile extends JButton {
                 this.setText(Integer.toString(this.adjacentMines));
             }
             // check if game is won
-            if (Main.board.isWon()) {
-                Main.gameOver(true);
+            if (board.isWon()) {
+                board.main.gameOver(true);
                 System.out.println("Game Won");
             }
         }
@@ -130,9 +132,9 @@ public class Tile extends JButton {
         int flags = 0;
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-                if (!(i == 0 && j == 0) && (this.gridx + i >= 0 && this.gridx + i < Main.board.width)
-                        && (this.gridy + j >= 0 && this.gridy + j < Main.board.height)) {
-                    if (Main.board.tiles[this.gridx + i][this.gridy + j].isFlagged()) {
+                if (!(i == 0 && j == 0) && (this.gridx + i >= 0 && this.gridx + i < board.width)
+                        && (this.gridy + j >= 0 && this.gridy + j < board.height)) {
+                    if (board.getTiles()[this.gridx + i][this.gridy + j].isFlagged()) {
                         flags++;
                     }
                 }
@@ -142,9 +144,9 @@ public class Tile extends JButton {
         if (flags != 0 && flags == this.adjacentMines) {
             for (int i = -1; i <= 1; i++) {
                 for (int j = -1; j <= 1; j++) {
-                    if (!(i == 0 && j == 0) && (this.gridx + i >= 0 && this.gridx + i < Main.board.width)
-                            && (this.gridy + j >= 0 && this.gridy + j < Main.board.height)) {
-                        Main.board.tiles[this.gridx + i][this.gridy + j].reveal();
+                    if (!(i == 0 && j == 0) && (this.gridx + i >= 0 && this.gridx + i < board.width)
+                            && (this.gridy + j >= 0 && this.gridy + j < board.height)) {
+                        board.getTiles()[this.gridx + i][this.gridy + j].reveal();
                     }
                 }
             }
@@ -153,10 +155,11 @@ public class Tile extends JButton {
     }
 
     // overide setText to change color
+    @Override
     public void setText(String text) {
         super.setText(text);
         // make text half as big as the tile size
-        this.setPreferredSize(new java.awt.Dimension(Main.board.tileSize / 2, Main.board.tileSize / 2));
+        this.setPreferredSize(new java.awt.Dimension(board.tileSize / 2, board.tileSize / 2));
 
         switch (text) {
             case "":
@@ -197,7 +200,7 @@ public class Tile extends JButton {
             case "💥":
                 this.setBackground(Color.RED);
                 // game over and lost
-                Main.gameOver(false);
+                board.main.gameOver(false);
                 System.out.println("Game Lost");
                 break;
             case "X":
@@ -206,11 +209,11 @@ public class Tile extends JButton {
                 break;
             case /*🚩*/ "<html><div style='text-align: center;'>&#9873;</div></html>": // flag: &#9873; but html
                 this.isFlagged = true;
-                MineBoard.setFlagsLeft(MineBoard.getFlagsLeft() - 1);
+                board.setFlagsLeft(board.getFlagsLeft() - 1);
                 break;
             case " ":
                 this.isFlagged = false;
-                MineBoard.setFlagsLeft(MineBoard.getFlagsLeft() + 1);
+                board.setFlagsLeft(board.getFlagsLeft() + 1);
                 break;
             default:
                 this.setBackground(new Color(170, 170, 170));

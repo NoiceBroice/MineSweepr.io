@@ -20,33 +20,35 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Main {
-    public static JFrame frame;
-    public static MineBoard board;
-    public static JLabel flagsLeft;
-    public static int diff = 0;
-    public static Timer timer;
-    private static JTextField customDim;
-    private static Integer secondsPassed;
-    private static JButton back;
-    private static JPanel topBar;
-    private static JLayeredPane game;
-    private static JPanel difficulty;
-    private static JButton[] diffs;
-    private static JButton easy;
-    private static JButton medium;
-    private static JButton hard;
-    private static JButton custom;
-    private static JPanel panel2;
+    private JFrame frame;
+    private MineBoard board;
+    private JLabel flagsLeft;
+    private int diff = 0;
+    private Timer timer;
+
+    private JTextField customDim;
+    private Integer secondsPassed;
+    private JButton back;
+    private JPanel topBar;
+    private JLayeredPane game;
+    private JPanel difficulty;
+    private JButton[] diffs;
+    private JButton easy;
+    private JButton medium;
+    private JButton hard;
+    private JButton custom;
+    private JPanel panel2;
 
     public static void main(String[] args) {
-        frame = new JFrame("Brice's Scuffed MineSweeper");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 800);
-        frame.setLocationRelativeTo(null);
-        run();
+        Main main = new Main();
+        main.frame = new JFrame("Brice's Scuffed MineSweeper");
+        main.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        main.frame.setSize(800, 800);
+        main.frame.setLocationRelativeTo(null);
+        main.run();
     }
 
-    public static void run() {
+    public void run() {
         frame.setLayout(new GridLayout(5, 1));
         frame.setBackground(Color.DARK_GRAY);
         // some space
@@ -73,7 +75,7 @@ public class Main {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 if (diff == 3) {
                     try {
-                        if ((customDim.getText().isEmpty()) && !(Integer.parseInt(customDim.getText()) >= 9
+                        if (customDim.getText().isBlank() || !(Integer.parseInt(customDim.getText()) >= 9
                                 && Integer.parseInt(customDim.getText()) <= 100)) { // catch exception for cool
                             customDim.setText("Enter number between 9 and 100");
                             customDim.setBackground(new Color(255, 100, 100));
@@ -211,7 +213,7 @@ public class Main {
         frame.setVisible(true);
     }
 
-    private static void init() {
+    private void init() {
         game = new JLayeredPane();
         int width = 9;
         int height = 9;
@@ -240,7 +242,7 @@ public class Main {
         }
         frame.setLayout(new BorderLayout());
         game.setLayout(new BorderLayout());
-        board = new MineBoard(height, width, mines);
+        board = new MineBoard(this, height, width, mines);
 
         topBar = new JPanel();
         topBar.setLayout(new GridLayout(1, 3));
@@ -292,7 +294,7 @@ public class Main {
         topBar.add(time);
 
         flagsLeft = new JLabel();
-        flagsLeft.setText(/*🚩*/"<html><font color='red'>&#x2691;</font> " + MineBoard.getFlagsLeft() + "</html>");
+        updateFlagesLeft();
         flagsLeft.setForeground(Color.WHITE);
         flagsLeft.setFont(flagsLeft.getFont().deriveFont(22.0f));
         // center title text
@@ -314,13 +316,18 @@ public class Main {
         frame.setVisible(true);
     }
 
+    public void updateFlagesLeft() {
+        flagsLeft.setText(/*🚩*/"<html><font color='red'>&#x2691;</font> " + board.getFlagsLeft() + "</html>");
+    }
+
     // create layered pane with game over message, restart button, back to menu
     // button, and disable all tiles
-    public static void gameOver(boolean win) {
+    public void gameOver(boolean win) {
+
         // stop timer
         timer.cancel();
         timer.purge();
-        MineBoard.disableAll();
+        board.disableAll();
         topBar.setBackground(win ? new Color(12, 48, 12) : new Color(48, 12, 12));
         timer = new Timer();
         TimerTask task = new TimerTask() { // new end game
@@ -335,7 +342,7 @@ public class Main {
         timer.scheduleAtFixedRate(task, (win) ? 0 : 100, (24 / (diff + 1)));
     }
 
-    public static void gameOverlay(boolean win) {
+    public void gameOverlay(boolean win) {
 
         game.setLayout(null);
         back.setEnabled(false);
@@ -426,28 +433,24 @@ public class Main {
 
     }
 
-    private static void addsecond() {
+    private void addsecond() {
         secondsPassed++;
     }
 
-    private static void menuButtonsColor() {
+    public JLabel getFlagsLeft() {
+        return flagsLeft;
+    }
+
+    private void menuButtonsColor() {
         // everything in diffs gray with for each loop
         for (JButton b : diffs) {
             b.setBackground(Color.GRAY);
         }
-        switch (diff) {
-            case 0:
-                easy.setBackground(Color.GREEN);
-                break;
-            case 1:
-                medium.setBackground(Color.GREEN);
-                break;
-            case 2:
-                hard.setBackground(Color.GREEN);
-                break;
-            case 3:
-                custom.setBackground(Color.GREEN);
-                break;
+        // set selected difficulty to green
+        diffs[diff].setBackground(Color.GREEN);
+        // if custom is selected, set customDim field to focus
+        if (diff == 3) {
+            customDim.requestFocus();
         }
     }
     // when frame is resized it will resize the board

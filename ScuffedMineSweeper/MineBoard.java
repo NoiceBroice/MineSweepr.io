@@ -5,15 +5,17 @@ import java.awt.GridLayout;
 import javax.swing.JPanel;
 
 public class MineBoard extends JPanel {
-    private static int flagsLeft = 0;
+    private int flagsLeft = 0;
+    public Main main;
     public int height;
-    public static int tileSize;
+    public int tileSize;
     public int width;
     private int tilesChecked;
-    Tile[][] tiles;
+    private Tile[][] tiles;
 
-    public MineBoard(int height, int width, int mines) {
+    public MineBoard(Main main, int height, int width, int mines) {
         super(new GridLayout(height, width));
+        this.main = main;
 
         this.height = height;
         this.width = width;
@@ -27,7 +29,7 @@ public class MineBoard extends JPanel {
         // create tiles
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                tiles[i][j] = new Tile(i, j);
+                tiles[i][j] = new Tile(this, i, j);
                 this.add(tiles[i][j]);
                 tiles[i][j].setVisible(true);
             }
@@ -70,36 +72,40 @@ public class MineBoard extends JPanel {
         tile.setText("X");
     }
 
-    public static int getFlagsLeft() {
+    public Tile[][] getTiles() {
+        return tiles;
+    }
+
+    public int getFlagsLeft() {
         return flagsLeft;
     }
 
-    public static void setFlagsLeft(int f) {
+    public void setFlagsLeft(int f) {
         flagsLeft = f;
-        Main.flagsLeft.setText("🚩" + (flagsLeft));
+        main.updateFlagesLeft();
     }
 
-    public static void disableAll() {
-        for (int i = 0; i < Main.board.width; i++) {
-            for (int j = 0; j < Main.board.height; j++) {
-                Main.board.tiles[i][j].setEnabled(false);
+    public void disableAll() {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                tiles[i][j].setEnabled(false);
             }
         }
     }
 
-    public static void enableAll() {
-        for (int i = 0; i < Main.board.width; i++) {
-            for (int j = 0; j < Main.board.height; j++) {
-                Main.board.tiles[i][j].setEnabled(true);
+    public void enableAll() {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                tiles[i][j].setEnabled(true);
             }
         }
     }
 
-    public static boolean isWon() {
+    public boolean isWon() {
         // check if all tiles that are not mines are revealed
-        for (int i = 0; i < Main.board.width; i++) {
-            for (int j = 0; j < Main.board.height; j++) {
-                if (!Main.board.tiles[i][j].isMine() && !Main.board.tiles[i][j].isRevealed()) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (!tiles[i][j].isMine() && !tiles[i][j].isRevealed()) {
                     return false;
                 }
             }
