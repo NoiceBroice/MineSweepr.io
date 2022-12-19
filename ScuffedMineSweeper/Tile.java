@@ -44,7 +44,7 @@ public class Tile extends JButton {
                         if (!isFlagged) {
                             if (MineBoard.getFlagsLeft() > 0) {
                                 // set flag text to html flag icon
-                                setText("<");
+                                setText("<html><div style='text-align: center;'>&#9873;</div></html>");
                             }
                         } else {
                             // since error is thrown when you try to set text to null and change it later
@@ -95,10 +95,6 @@ public class Tile extends JButton {
         // System.out.println("Revealed: " + this.gridx + ", " + this.gridy);
         if (this.isMine) {
             this.setText("💥");
-            // game over
-            Main.gameOver(false);
-            System.out.println("Game Lost");
-
         } else {
             if (this.adjacentMines == 0) {
                 this.setText("");
@@ -143,7 +139,7 @@ public class Tile extends JButton {
             }
         }
         // if flags == adjacentMines, reveal all adjacent tiles
-        if (flags == 0 || flags == this.adjacentMines) {
+        if (flags != 0 && flags == this.adjacentMines) {
             for (int i = -1; i <= 1; i++) {
                 for (int j = -1; j <= 1; j++) {
                     if (!(i == 0 && j == 0) && (this.gridx + i >= 0 && this.gridx + i < Main.board.width)
@@ -200,12 +196,15 @@ public class Tile extends JButton {
                 break;
             case "💥":
                 this.setBackground(Color.RED);
+                // game over and lost
+                Main.gameOver(false);
+                System.out.println("Game Lost");
                 break;
             case "X":
                 this.setForeground(new Color(34, 150, 31));
                 this.setBackground(Color.DARK_GRAY);
                 break;
-            case "🚩":
+            case /*🚩*/ "<html><div style='text-align: center;'>&#9873;</div></html>": // flag: &#9873; but html
                 this.isFlagged = true;
                 MineBoard.setFlagsLeft(MineBoard.getFlagsLeft() - 1);
                 break;

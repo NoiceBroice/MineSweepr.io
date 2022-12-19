@@ -178,6 +178,9 @@ public class Main {
             public void focusGained(FocusEvent e) {
                 customDim.setText("");
                 customDim.setBackground(Color.WHITE);
+                // set customDim to be the active button
+                diff = 3;
+                menuButtonsColor();
             }
 
             public void focusLost(FocusEvent e) {
@@ -289,7 +292,7 @@ public class Main {
         topBar.add(time);
 
         flagsLeft = new JLabel();
-        flagsLeft.setText("🚩" + MineBoard.getFlagsLeft());
+        flagsLeft.setText(/*🚩*/"<html><font color='red'>&#x2691;</font> " + MineBoard.getFlagsLeft() + "</html>");
         flagsLeft.setForeground(Color.WHITE);
         flagsLeft.setFont(flagsLeft.getFont().deriveFont(22.0f));
         // center title text
