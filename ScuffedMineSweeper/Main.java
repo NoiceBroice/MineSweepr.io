@@ -41,7 +41,7 @@ public class Main {
     private JButton medium;
     private JButton hard;
     private JButton custom;
-    private JPanel panel2;
+    private JPanel emptyForTxtField;
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -142,22 +142,22 @@ public class Main {
         }
         menu.add(difficulty);
 
-        panel2 = new JPanel();
-        panel2.setBackground(Color.DARK_GRAY);
-        panel2.setLayout(new GridLayout(1, 4));
+        emptyForTxtField = new JPanel();
+        emptyForTxtField.setBackground(Color.DARK_GRAY);
+        emptyForTxtField.setLayout(new GridLayout(1, 4));
 
         // add 3 space fillers
         JPanel filler1 = new JPanel();
         filler1.setBackground(Color.DARK_GRAY);
-        panel2.add(filler1);
+        emptyForTxtField.add(filler1);
 
         JPanel filler2 = new JPanel();
         filler2.setBackground(Color.DARK_GRAY);
-        panel2.add(filler2);
+        emptyForTxtField.add(filler2);
 
         JPanel filler3 = new JPanel();
         filler3.setBackground(Color.DARK_GRAY);
-        panel2.add(filler3);
+        emptyForTxtField.add(filler3);
         // add text box for a custom dimension
         customDim = new JTextField();
         customDim.setBackground(Color.WHITE);
@@ -196,9 +196,9 @@ public class Main {
                 }
             }
         });
-        panel2.add(customDim);
+        emptyForTxtField.add(customDim);
 
-        menu.add(panel2);
+        menu.add(emptyForTxtField);
         panel = menu;
         frame.add(panel);
         frame.setVisible(true);
