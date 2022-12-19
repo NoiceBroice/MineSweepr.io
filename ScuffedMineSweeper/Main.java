@@ -190,7 +190,7 @@ public class Main {
         customDim.addKeyListener(new KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent e) {
                 char c = e.getKeyChar();
-                if (((c < '0') || (c > '9')) && (c != java.awt.event.KeyEvent.VK_BACK_SPACE)) {
+                if (((c < '0') || (c > '9')) && (c != java.awt.event.KeyEvent.VK_BACK_SPACE) && (c != java.awt.event.KeyEvent.VK_DELETE)) {
                     e.consume(); // if it's not a number, ignore the event
                 }
             }
