@@ -12,6 +12,7 @@ public class MineBoard extends JPanel {
     public int width;
     private int tilesChecked;
     private Tile[][] tiles;
+    private boolean isGameOver = false;
 
     public MineBoard(Main main, int height, int width, int mines) {
         super(new GridLayout(height, width));
@@ -83,6 +84,14 @@ public class MineBoard extends JPanel {
     public void setFlagsLeft(int f) {
         flagsLeft = f;
         main.updateFlagesLeft();
+    }
+
+    public void setGameOver(boolean b) {
+        isGameOver = b;
+    }
+
+    public boolean isGameOver() {
+        return isGameOver;
     }
 
     public void disableAll() {

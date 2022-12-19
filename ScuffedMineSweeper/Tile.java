@@ -200,8 +200,11 @@ public class Tile extends JButton {
             case "💥":
                 this.setBackground(Color.RED);
                 // game over and lost
-                board.main.gameOver(false);
-                System.out.println("Game Lost");
+                if (!board.isGameOver()) {
+                    board.setGameOver(true);
+                    board.main.gameOver(false);
+                    System.out.println("Game Lost");
+                }
                 break;
             case "X":
                 this.setForeground(new Color(34, 150, 31));
