@@ -1,5 +1,5 @@
 # MineSweepr.io
-java applet draft for a websiite I hope to make for average minesweeper enjoyers.
+java applet draft for a website I hope to make for average minesweeper enjoyers.
 it's possible it could take some sort of a chess.com & tetr.io inspiration as I like:
 -how clean they are
 -the competition involved
