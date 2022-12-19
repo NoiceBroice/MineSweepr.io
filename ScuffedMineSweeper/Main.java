@@ -26,6 +26,10 @@ public class Main {
     private int diff = 0;
     private Timer timer;
 
+    private JPanel panel;
+    private JPanel menu;
+    private JPanel gamePanel;
+
     private JTextField customDim;
     private Integer secondsPassed;
     private JButton back;
@@ -49,12 +53,13 @@ public class Main {
     }
 
     public void run() {
-        frame.setLayout(new GridLayout(5, 1));
-        frame.setBackground(Color.DARK_GRAY);
+        menu = new JPanel();
+        menu.setLayout(new GridLayout(5, 1));
+        menu.setBackground(Color.DARK_GRAY);
         // some space
         JPanel panel1 = new JPanel();
         panel1.setBackground(Color.DARK_GRAY);
-        frame.add(panel1);
+        menu.add(panel1);
 
         JPanel titl = new JPanel();
         titl.setBackground(Color.DARK_GRAY);
@@ -66,7 +71,7 @@ public class Main {
         // center title text
         title.setHorizontalAlignment(JLabel.CENTER);
         titl.add(title);// haha funny
-        frame.add(titl);
+        menu.add(titl);
 
         JButton play = new JButton("Play");
         play.setBackground(Color.LIGHT_GRAY);
@@ -88,19 +93,10 @@ public class Main {
                     }
 
                 }
-                frame.remove(play);
-                frame.remove(titl);
-                frame.remove(panel1);
-                frame.remove(difficulty);
-                frame.remove(easy);
-                frame.remove(medium);
-                frame.remove(hard);
-                frame.remove(panel2);
-                frame.repaint();
                 init();
             }
         });
-        frame.add(play);
+        menu.add(play);
 
         difficulty = new JPanel(new GridLayout(1, 3));
         difficulty.setBackground(Color.DARK_GRAY);
@@ -144,7 +140,7 @@ public class Main {
                 custom.setBackground(Color.GREEN);
                 break;
         }
-        frame.add(difficulty);
+        menu.add(difficulty);
 
         panel2 = new JPanel();
         panel2.setBackground(Color.DARK_GRAY);
@@ -202,18 +198,14 @@ public class Main {
         });
         panel2.add(customDim);
 
-        frame.add(panel2);
-
-        panel1.setVisible(true);
-        panel2.setVisible(true);
-        difficulty.setVisible(true);
-        titl.setVisible(true);
-        title.setVisible(true);
-        play.setVisible(true);
+        menu.add(panel2);
+        panel = menu;
+        frame.add(panel);
         frame.setVisible(true);
     }
 
     private void init() {
+        gamePanel = new JPanel();
         game = new JLayeredPane();
         int width = 9;
         int height = 9;
@@ -240,7 +232,7 @@ public class Main {
                 mines = (int) Math.floor(Math.pow(Integer.parseInt(customDim.getText()), 2) / 5.625);
                 break;
         }
-        frame.setLayout(new BorderLayout());
+        gamePanel.setLayout(new BorderLayout());
         game.setLayout(new BorderLayout());
         board = new MineBoard(this, height, width, mines);
 
@@ -248,7 +240,7 @@ public class Main {
         topBar.setLayout(new GridLayout(1, 3));
         topBar.setBackground(Color.DARK_GRAY);
         topBar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        topBar.setPreferredSize(new DimensionUIResource(frame.getWidth(), 50));
+        topBar.setPreferredSize(new DimensionUIResource(gamePanel.getWidth(), 50));
 
         back = new JButton("Back");
         back.setBackground(Color.LIGHT_GRAY);
@@ -259,16 +251,7 @@ public class Main {
                 timer.cancel();
                 timer.purge();
 
-                game.remove(board);
-                frame.remove(topBar);
-                frame.remove(game);
-                frame.remove(back);
-                frame.remove(flagsLeft);
-                frame.remove(panel2);
-                frame.repaint();
-
-                game.repaint();
-                run();
+                swapPanel(menu);
             }
         });
         topBar.add(back);
@@ -301,19 +284,20 @@ public class Main {
         flagsLeft.setHorizontalAlignment(JLabel.CENTER);
         topBar.add(flagsLeft);
 
-        back.setVisible(true);
-        time.setVisible(true);
-        flagsLeft.setVisible(true);
-        topBar.setVisible(true);
-
-        board.setVisible(true);
-        game.setVisible(true);
-
         game.add(board);
 
-        frame.add(topBar, java.awt.BorderLayout.NORTH);
-        frame.add(game, java.awt.BorderLayout.CENTER);
-        frame.setVisible(true);
+        gamePanel.add(topBar, java.awt.BorderLayout.NORTH);
+        gamePanel.add(game, java.awt.BorderLayout.CENTER);
+
+        swapPanel(gamePanel);
+    }
+
+    public void swapPanel(JPanel panel) {
+        frame.remove(this.panel);
+        this.panel = panel;
+        frame.add(this.panel);
+        frame.revalidate();
+        frame.repaint();
     }
 
     public void updateFlagesLeft() {
@@ -385,10 +369,6 @@ public class Main {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 timer.cancel();
                 timer.purge();
-
-                frame.remove(game);
-                frame.remove(topBar);
-                frame.repaint();
                 init();
             }
         });
@@ -400,30 +380,15 @@ public class Main {
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 timer.cancel();
                 timer.purge();
-
-                frame.remove(backEnd);
-                frame.remove(game);
-                frame.remove(topBar);
-                // frame.remove(noGame);
-                frame.remove(gameEnd);
-                // clear frame
-
-                frame.repaint();
-                run();
+                swapPanel(menu);
             }
         });
 
-        gameOver.setVisible(true);
-        restart.setVisible(true);
-        backEnd.setVisible(true);
-
         buttonPanel.add(restart);
         buttonPanel.add(backEnd);
-        buttonPanel.setVisible(true);
 
         gameEnd.add(gameOver);
         gameEnd.add(buttonPanel);
-        gameEnd.setVisible(true);
 
         // game.add(noGame);
         // game.moveToFront(noGame);

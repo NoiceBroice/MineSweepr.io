@@ -212,6 +212,7 @@ public class Tile extends JButton {
                 break;
             case /*🚩*/ "<html><div style='text-align: center;'>&#9873;</div></html>": // flag: &#9873; but html
                 this.isFlagged = true;
+                this.setForeground(Color.RED);
                 board.setFlagsLeft(board.getFlagsLeft() - 1);
                 break;
             case " ":
