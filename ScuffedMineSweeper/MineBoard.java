@@ -4,7 +4,7 @@ import java.awt.GridLayout;
 import javax.swing.JPanel;
 
 public  class MineBoard extends JPanel{
-    private static int flagsLeft = 0;
+    private int flagsLeft = 0;
     private int dimHeight;
     private int tileSize;
     private int dimWidth;
@@ -36,7 +36,7 @@ public  class MineBoard extends JPanel{
         for(int i = 0; i < mines; i++){
             int x = (int)(Math.random()*width);
             int y = (int)(Math.random()*height);
-            Tile tile = (Tile)this.getComponent(x*height+y);
+            Tile tile = tiles[x][y];
             if(tile.isMine()){i--;}
             tile.setMine();
         }
@@ -44,12 +44,12 @@ public  class MineBoard extends JPanel{
         //populate board with adjacent mines count per tile
         for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++){
-                Tile tile = (Tile)this.getComponent(i*height+j);
+                Tile tile = tiles[i][j];
                 int adjacentMines = 0;
                 for(int k = -1; k <= 1; k++){
                     for(int l = -1; l <= 1; l++){
                         if(i+k >= 0 && i+k < width && j+l >= 0 && j+l < height){
-                            Tile adjacentTile = (Tile)this.getComponent((i+k)*height+(j+l));
+                            Tile adjacentTile = tiles[(i+k)][(j+l)];
                             if(adjacentTile.isMine()){
                                 adjacentMines++;
                             }
@@ -60,11 +60,11 @@ public  class MineBoard extends JPanel{
             }
         }
         //select random tile with no adjacent mines and reveal it
-        Tile tile = (Tile)this.getComponent((int)(Math.random()*width)*height+(int)(Math.random()*height));
-        while(tile.getAdjacentMines() != 0){
-            tile = tiles[(int)(Math.random()*width)][(int)(Math.random()*height)];
+        Tile start = tiles[(int)(Math.random()*width)][(int)(Math.random()*height)];
+        while(start.getAdjacentMines() != 0){
+            start = tiles[(int)(Math.random()*width)][(int)(Math.random()*height)];
         }
-        tile.setText("X");
+        start.setText("X");
     }
     public int getDimHeight(){
         return dimHeight;
@@ -72,7 +72,6 @@ public  class MineBoard extends JPanel{
     public int getDimWidth(){
         return dimWidth;
     }
-
     public int getTileSize(){
         return tileSize;
     }
