@@ -6,7 +6,7 @@ it's possible it could take some sort of a chess.com & tetr.io inspiration as I 
 
 - the competition involved
 
-- coding is fun and I can't wait to have more fun
+- yeah
 
 Ranking will hopefully happen
 
