@@ -1,5 +1,5 @@
 # MineSweepr.io
-java applet draft for a website I hope to make for average minesweeper enjoyers.
+Java applet draft for a website I hope to make for average minesweeper enjoyers.
 
 I plan to keep this project very portable and only require the executable jar
 
